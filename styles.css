@@ -110,3 +110,31 @@ th, td {
     max-width: 600px;
     height: auto;
 }
+
+.btn-fechar {
+    background-color: red;
+    /* Outras propriedades de estilo, como cor da fonte, borda, etc. */
+    color: white; /* Por exemplo, para tornar o texto branco em um fundo vermelho */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-fechar:hover {
+    background-color: #FF0000; /* Vermelho */
+}
+
+footer {
+  padding: 10px 20px;
+  text-align: center; /* Center the content */
+}
+
+footer a {
+  color: #007bff; /* Blue link color */
+  text-decoration: none; /* Remove underline from links */
+}
+
+footer a:hover {
+  color: #0056b3; /* Darker blue for hover effect */
+}
