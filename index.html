@@ -62,7 +62,7 @@
             </table>
             <button type="button" id="add-items-btn">Adicionar Itens</button>
             <button type="button" id="save-image-btn">Salvar como Imagem</button>
-            <button type="button" id="close-comanda-btn">Fechar Comanda</button>
+            <button type="button" id="close-comanda-btn" class="btn-fechar">Fechar Comanda</button>
         </div>
 
         <h2>Comandas</h2>
@@ -348,13 +348,21 @@
                 calculateTotal();
             }
 
+            function calculateDiscountedValue(comanda) {
+              let total = comanda.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+              const discount = parseFloat(comanda.discount) || 0;
+              const discountIsPercent = comanda.discountType === 'percent';
+              const discountedTotal = discountIsPercent ? total - (total * discount / 100) : total - discount;
+              return discountedTotal.toFixed(2);
+            }
+
             function updateComandasList() {
                     comandasUl.innerHTML = '';
                     comandas.forEach(comanda => {
                         const li = document.createElement('li');
                         const clientName = comanda.clientName ? ` - Cliente: ${comanda.clientName}` : '';
                         const value = comanda.items.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-                        li.innerHTML = `<i class="fas fa-clipboard-list"></i> Comanda ${comanda.id} - Mesa ${comanda.tableNumber} - ${comanda.status}${clientName} - ${comanda.date} - R$ ${value}`;
+                        li.innerHTML = `<i class="fas fa-clipboard-list"></i> Comanda ${comanda.id} - Mesa ${comanda.tableNumber} - ${comanda.status}${clientName} - ${comanda.date} - R$ ${calculateDiscountedValue(comanda)}`;
                         li.className = comanda.status === 'Aberta' ? 'status-open' : 'status-closed';
                         li.addEventListener('click', () => {
                             window.location.hash = comanda.id;
