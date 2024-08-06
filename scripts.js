@@ -174,19 +174,82 @@ if (saveOrderBtn) {
   });
 }
 
-// Adicionar comanda à lista
+// Adicionar comanda à lista na categoria correta
 function addOrderToList(order) {
-  if (orderList) {
-    const orderItem = document.createElement('div');
-    orderItem.className = 'order-item';
-    orderItem.innerHTML = `
-      <i class="fa-solid fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
-    `;
-    orderItem.addEventListener('click', () => {
-      window.location.href = `perfil.html#perfil-${order.profileId}#comanda-${order.id}`;
-    });
-    orderList.appendChild(orderItem);
+  const categories = categorizeOrders([order]);
+
+  if (categories.today.length > 0) {
+    let todayTitle = document.querySelector('h3[data-category="today"]');
+    if (!todayTitle) {
+      todayTitle = document.createElement('h3');
+      todayTitle.textContent = `Hoje - ${formatDate(new Date())}`;
+      todayTitle.setAttribute('data-category', 'today');
+      orderList.appendChild(todayTitle);
+    }
+    categories.today.forEach(order => appendOrderItem(order));
   }
+
+  if (categories.yesterday.length > 0) {
+    let yesterdayTitle = document.querySelector('h3[data-category="yesterday"]');
+    if (!yesterdayTitle) {
+      yesterdayTitle = document.createElement('h3');
+      yesterdayTitle.textContent = `Ontem - ${formatDate(new Date(new Date().setDate(new Date().getDate() - 1)))}`;
+      yesterdayTitle.setAttribute('data-category', 'yesterday');
+      orderList.appendChild(yesterdayTitle);
+    }
+    categories.yesterday.forEach(order => appendOrderItem(order));
+  }
+
+  if (categories.lastWeek.length > 0) {
+    let lastWeekTitle = document.querySelector('h3[data-category="lastWeek"]');
+    if (!lastWeekTitle) {
+      lastWeekTitle = document.createElement('h3');
+      lastWeekTitle.textContent = 'Semana passada';
+      lastWeekTitle.setAttribute('data-category', 'lastWeek');
+      orderList.appendChild(lastWeekTitle);
+    }
+    categories.lastWeek.forEach(order => appendOrderItem(order));
+  }
+
+  if (categories.lastMonth.length > 0) {
+    let lastMonthTitle = document.querySelector('h3[data-category="lastMonth"]');
+    if (!lastMonthTitle) {
+      lastMonthTitle = document.createElement('h3');
+      lastMonthTitle.textContent = 'Mês passado';
+      lastMonthTitle.setAttribute('data-category', 'lastMonth');
+      orderList.appendChild(lastMonthTitle);
+    }
+    categories.lastMonth.forEach(order => appendOrderItem(order));
+  }
+
+  Object.keys(categories.older).forEach(dateString => {
+    let olderTitle = document.querySelector(`h3[data-category="${dateString}"]`);
+    if (!olderTitle) {
+      olderTitle = document.createElement('h3');
+      olderTitle.textContent = dateString;
+      olderTitle.setAttribute('data-category', dateString);
+      orderList.appendChild(olderTitle);
+    }
+    categories.older[dateString].forEach(order => appendOrderItem(order));
+  });
+}
+
+// Função auxiliar para adicionar um item de comanda ao DOM
+function appendOrderItem(order) {
+  const orderItem = document.createElement('div');
+  orderItem.className = 'order-item';
+  orderItem.innerHTML = `
+    <i class="fa-solid fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
+  `;
+  orderItem.addEventListener('click', () => {
+    window.location.href = `perfil.html#perfil-${order.profileId}#comanda-${order.id}`;
+  });
+  orderList.appendChild(orderItem);
+}
+
+// Função para verificar se o elemento existe
+function getElement(selector) {
+  return document.querySelector(selector);
 }
 
 // Função para formatar a data
@@ -199,6 +262,14 @@ function formatDate(date) {
 
 // Função para agrupar comandas por categorias de tempo e datas específicas
 function categorizeOrders(orders) {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const lastWeekStart = new Date(today);
+  lastWeekStart.setDate(today.getDate() - 7);
+  const lastMonthStart = new Date(today);
+  lastMonthStart.setMonth(today.getMonth() - 1);
+
   const categories = {
     today: [],
     yesterday: [],
@@ -207,30 +278,21 @@ function categorizeOrders(orders) {
     older: {}
   };
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Reseta o horário para meia-noite
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const lastWeek = new Date(today);
-  lastWeek.setDate(lastWeek.getDate() - 7);
-  const lastMonth = new Date(today);
-  lastMonth.setMonth(lastMonth.getMonth() - 1);
-
   orders.forEach(order => {
     const orderDate = new Date(order.creationDate);
-    orderDate.setHours(0, 0, 0, 0); // Reseta o horário para meia-noite
-
     if (orderDate.toDateString() === today.toDateString()) {
       categories.today.push(order);
     } else if (orderDate.toDateString() === yesterday.toDateString()) {
       categories.yesterday.push(order);
-    } else if (orderDate >= lastWeek) {
+    } else if (orderDate >= lastWeekStart && orderDate < today) {
       categories.lastWeek.push(order);
-    } else if (orderDate >= lastMonth) {
+    } else if (orderDate >= lastMonthStart && orderDate < lastWeekStart) {
       categories.lastMonth.push(order);
     } else {
-      const orderDateString = formatDate(orderDate);
-      categories.older[orderDateString] = categories.older[orderDateString] || [];
+      const orderDateString = orderDate.toLocaleDateString();
+      if (!categories.older[orderDateString]) {
+        categories.older[orderDateString] = [];
+      }
       categories.older[orderDateString].push(order);
     }
   });
@@ -238,45 +300,147 @@ function categorizeOrders(orders) {
   return categories;
 }
 
+// Função auxiliar para adicionar um item de comanda ao DOM
+function appendOrderItem(order, categoryElement) {
+  const orderItem = document.createElement('div');
+  orderItem.className = 'order-item';
+  orderItem.innerHTML = `
+    <i class="fa-solid fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
+  `;
+  orderItem.addEventListener('click', () => {
+    window.location.href = `perfil.html#perfil-${order.profileId}#comanda-${order.id}`;
+  });
+  categoryElement.appendChild(orderItem);
+}
+
+// Adicionar comanda à lista na categoria correta
+function addOrderToList(order) {
+  const orderList = getElement('#order-list');
+  const categories = categorizeOrders([order]);
+
+  if (categories.today.length > 0) {
+    let todayCategory = document.querySelector('div[data-category="today"]');
+    if (!todayCategory) {
+      todayCategory = document.createElement('div');
+      todayCategory.setAttribute('data-category', 'today');
+      const todayTitle = document.createElement('h3');
+      todayTitle.textContent = `Hoje - ${formatDate(new Date())}`;
+      todayCategory.appendChild(todayTitle);
+      orderList.appendChild(todayCategory);
+    }
+    categories.today.forEach(order => appendOrderItem(order, todayCategory));
+  }
+
+  if (categories.yesterday.length > 0) {
+    let yesterdayCategory = document.querySelector('div[data-category="yesterday"]');
+    if (!yesterdayCategory) {
+      yesterdayCategory = document.createElement('div');
+      yesterdayCategory.setAttribute('data-category', 'yesterday');
+      const yesterdayTitle = document.createElement('h3');
+      yesterdayTitle.textContent = `Ontem - ${formatDate(new Date(new Date().setDate(new Date().getDate() - 1)))}`;
+      yesterdayCategory.appendChild(yesterdayTitle);
+      orderList.appendChild(yesterdayCategory);
+    }
+    categories.yesterday.forEach(order => appendOrderItem(order, yesterdayCategory));
+  }
+
+  if (categories.lastWeek.length > 0) {
+    let lastWeekCategory = document.querySelector('div[data-category="lastWeek"]');
+    if (!lastWeekCategory) {
+      lastWeekCategory = document.createElement('div');
+      lastWeekCategory.setAttribute('data-category', 'lastWeek');
+      const lastWeekTitle = document.createElement('h3');
+      lastWeekTitle.textContent = 'Semana passada';
+      lastWeekCategory.appendChild(lastWeekTitle);
+      orderList.appendChild(lastWeekCategory);
+    }
+    categories.lastWeek.forEach(order => appendOrderItem(order, lastWeekCategory));
+  }
+
+  if (categories.lastMonth.length > 0) {
+    let lastMonthCategory = document.querySelector('div[data-category="lastMonth"]');
+    if (!lastMonthCategory) {
+      lastMonthCategory = document.createElement('div');
+      lastMonthCategory.setAttribute('data-category', 'lastMonth');
+      const lastMonthTitle = document.createElement('h3');
+      lastMonthTitle.textContent = 'Mês passado';
+      lastMonthCategory.appendChild(lastMonthTitle);
+      orderList.appendChild(lastMonthCategory);
+    }
+    categories.lastMonth.forEach(order => appendOrderItem(order, lastMonthCategory));
+  }
+
+  Object.keys(categories.older).forEach(dateString => {
+    let olderCategory = document.querySelector(`div[data-category="${dateString}"]`);
+    if (!olderCategory) {
+      olderCategory = document.createElement('div');
+      olderCategory.setAttribute('data-category', dateString);
+      const olderTitle = document.createElement('h3');
+      olderTitle.textContent = dateString;
+      olderCategory.appendChild(olderTitle);
+      orderList.appendChild(olderCategory);
+    }
+    categories.older[dateString].forEach(order => appendOrderItem(order, olderCategory));
+  });
+}
+
 // Carregar comandas ao iniciar
 window.addEventListener('load', () => {
+  const orderList = getElement('#order-list');
+  const profileId = window.location.hash.split('#perfil-')[1];
+
   if (orderList && profileId) {
     const orders = getOrdersForProfile(profileId);
     const categorizedOrders = categorizeOrders(orders);
 
     if (categorizedOrders.today.length > 0) {
+      const todayCategory = document.createElement('div');
+      todayCategory.setAttribute('data-category', 'today');
       const todayTitle = document.createElement('h3');
       todayTitle.textContent = `Hoje - ${formatDate(new Date())}`;
-      orderList.appendChild(todayTitle);
-      categorizedOrders.today.forEach(order => addOrderToList(order));
+      todayCategory.appendChild(todayTitle);
+      orderList.appendChild(todayCategory);
+      categorizedOrders.today.forEach(order => appendOrderItem(order, todayCategory));
     }
 
     if (categorizedOrders.yesterday.length > 0) {
+      const yesterdayCategory = document.createElement('div');
+      yesterdayCategory.setAttribute('data-category', 'yesterday');
       const yesterdayTitle = document.createElement('h3');
       yesterdayTitle.textContent = `Ontem - ${formatDate(new Date(new Date().setDate(new Date().getDate() - 1)))}`;
-      orderList.appendChild(yesterdayTitle);
-      categorizedOrders.yesterday.forEach(order => addOrderToList(order));
+      yesterdayCategory.appendChild(yesterdayTitle);
+      orderList.appendChild(yesterdayCategory);
+      categorizedOrders.yesterday.forEach(order => appendOrderItem(order, yesterdayCategory));
     }
 
     if (categorizedOrders.lastWeek.length > 0) {
+      const lastWeekCategory = document.createElement('div');
+      lastWeekCategory.setAttribute('data-category', 'lastWeek');
       const lastWeekTitle = document.createElement('h3');
       lastWeekTitle.textContent = 'Semana passada';
-      orderList.appendChild(lastWeekTitle);
-      categorizedOrders.lastWeek.forEach(order => addOrderToList(order));
+      lastWeekCategory.appendChild(lastWeekTitle);
+      orderList.appendChild(lastWeekCategory);
+      categorizedOrders.lastWeek.forEach(order => appendOrderItem(order, lastWeekCategory));
     }
 
     if (categorizedOrders.lastMonth.length > 0) {
+      const lastMonthCategory = document.createElement('div');
+      lastMonthCategory.setAttribute('data-category', 'lastMonth');
       const lastMonthTitle = document.createElement('h3');
       lastMonthTitle.textContent = 'Mês passado';
-      orderList.appendChild(lastMonthTitle);
-      categorizedOrders.lastMonth.forEach(order => addOrderToList(order));
+      lastMonthCategory.appendChild(lastMonthTitle);
+      orderList.appendChild(lastMonthCategory);
+      categorizedOrders.lastMonth.forEach(order => appendOrderItem(order, lastMonthCategory));
     }
 
     Object.keys(categorizedOrders.older).forEach(dateString => {
+      const olderCategory = document.createElement('div');
+      olderCategory.setAttribute('data-category', dateString);
       const olderTitle = document.createElement('h3');
       olderTitle.textContent = dateString;
-      orderList.appendChild(olderTitle);
-      categorizedOrders.older[dateString].forEach(order => addOrderToList(order));
+      olderCategory.appendChild(olderTitle);
+      orderList.appendChild(olderCategory);
+      categorizedOrders.older[dateString].forEach(order => appendOrderItem(order, olderCategory));
     });
   }
 });
@@ -284,13 +448,6 @@ window.addEventListener('load', () => {
 // Voltar para a página inicial
 if (viewProfilesBtn) {
   viewProfilesBtn.addEventListener('click', () => {
-    window.location.href = 'index.html';
-  });
-}
-
-// Recarregar a página ao clicar na logo
-if (logo) {
-  logo.addEventListener('click', () => {
     window.location.href = 'index.html';
   });
 }
