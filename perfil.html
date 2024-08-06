@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="logo.png" alt="Logo" class="logo">
+    </header>
+    <main>
+      <button id="view-profiles-btn">Perfis</button>
+      <button id="create-order-btn">Criar Comanda</button>
+      <div id="order-list">
+        <!-- Categorias de Comandas vão ser inseridas aqui -->
+      </div>
+    </main>
+    <footer>
+      © Derivan Souza - <a href="#">Comanda Online</a> | <a href="#">Projeto</a>
+    </footer>
+  </div>
+
+  <div id="order-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-order-modal" class="close">&times;</span>
+      <h2>Criar Comanda</h2>
+      <input type="text" id="numero-mesa" placeholder="Número da Mesa">
+      <button id="save-order-btn">Salvar</button>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
