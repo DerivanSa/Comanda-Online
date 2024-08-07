@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comanda</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="logo.png" alt="Logo" class="logo">
+      <button id="back-to-orders-btn">Lista de Comandas</button>
+    </header>
+    <main>
+      <h1 id="establishment-name"></h1>
+      <p id="waiter-name"></p>
+      <p id="order-date"></p>
+      <p id="order-status"></p>
+      <p id="order-close-date" style="display: none;"></p>
+      <p id="order-duration" style="display: none;"></p>
+      <p id="order-total"></p>
+      <p id="table-number"></p>
+
+      <div>
+        <label for="client-name">Nome do Cliente:</label>
+        <input type="text" id="client-name">
+      </div>
+      <div>
+        <label for="client-contact">Contato do Cliente:</label>
+        <input type="text" id="client-contact">
+      </div>
+      <div>
+        <label for="waiter-note">Observação do Garçom:</label>
+        <input type="text" id="waiter-note">
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Quantidade</th>
+            <th>Produto</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody id="product-list">
+          <!-- Linhas de produtos serão inseridas aqui -->
+        </tbody>
+      </table>
+      <button id="add-product-row">Adicionar mais 10 linhas</button>
+      
+      <div>
+        <label for="total">Total:</label>
+        <input type="text" id="total" readonly>
+      </div>
+
+      <button id="save-image-btn">Salvar Imagem</button>
+      <button id="close-order-btn">Fechar Comanda</button>
+
+      <button id="back-to-orders-btn-bottom">Lista de Comandas</button>
+
+      <h2>Últimas Comandas</h2>
+      <div id="recent-orders-list">
+        <!-- Últimas comandas do garçom serão inseridas aqui -->
+      </div>
+    </main>
+    <footer>
+      © Derivan Souza - <a href="#">Comanda Online</a> | <a href="#">Projeto</a>
+    </footer>
+  </div>
+
+  <script src="comanda.js"></script>
+</body>
+</html>
