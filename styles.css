@@ -132,3 +132,206 @@ footer a:hover {
   text-decoration: none;
   cursor: pointer;
 }
+
+.recent-order {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin: 5px 0;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.recent-order:hover {
+  background-color: #f0f0f0;
+}
+
+.recent-order i {
+  margin-right: 10px;
+}
+
+#comanda-container {
+  display: none;
+  padding: 20px;
+}
+
+#restaurant-name{
+  text-align: center;
+  margin-top: 10px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+#order-info,
+#total-amount,
+#footer {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+#product-table {
+  margin: 0 auto;
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #000;
+}
+
+#product-table th,
+#product-table td {
+  border: 1px solid #000;
+  padding: 5px;
+  text-align: center;
+}
+
+
+#order-date1,
+#order-status1,
+#order-close-date1,
+#order-duration1,
+#client-name1,
+#client-contact1,
+#waiter-note1,
+#total-amount1 {
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+#popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#popup-content {
+  background: #fff;
+  padding: 20px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  border-radius: 10px;
+  position: relative;
+}
+
+#popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#popup-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#popup-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#popup-download-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+#popup-download-btn:hover {
+  background-color: #218838;
+}
+
+#establishment-name{
+  text-align: center;
+}
+
+.red-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Adiciona uma transição suave */
+}
+
+.red-button:hover {
+  background-color: #a00e0e; /* Cor mais escura quando o mouse está sobre o botão */
+}
+
+.green-button {
+  background-color: #28a745; /* Cor verde */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transição suave para a cor de fundo */
+}
+
+.green-button:hover {
+  background-color: #218838; /* Cor verde escuro para o efeito hover */
+}
+
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Espaçamento horizontal entre os botões */
+  justify-content: center; /* Centraliza os botões horizontalmente */
+}
+
+.button-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  /* Remove margens padrão e define largura mínima */
+  margin: 5px; /* Espaçamento vertical entre botões */
+  min-width: 150px;
+}
+
+.green-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.green-button:hover {
+  background-color: #218838;
+}
+
+.red-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.red-button:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 600px) {
+  .button-container {
+    flex-direction: column; /* Empilha os botões verticalmente em telas menores */
+    align-items: center; /* Centraliza os botões horizontalmente */
+  }
+
+  .button-container button {
+    margin: 5px 0; /* Ajusta o espaçamento vertical em telas menores */
+  }
+}
