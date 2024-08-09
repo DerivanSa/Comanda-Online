@@ -80,7 +80,7 @@ function addProfileToList(profile) {
     const profileItem = document.createElement('div');
     profileItem.className = 'profile-item';
     profileItem.innerHTML = `
-      <i class="fa-solid fa-user"></i> ${profile.id} - ${profile.estabelecimento} - ${profile.funcionario} - ${new Date(profile.creationDate).toLocaleString()}
+      <i class="fas fa-user"></i> ${profile.id} - ${profile.estabelecimento} - ${profile.funcionario} - ${new Date(profile.creationDate).toLocaleString()}
     `;
     profileItem.addEventListener('click', () => {
       window.location.href = `perfil.html#perfil-${profile.id}`;
@@ -239,10 +239,10 @@ function appendOrderItem(order) {
   const orderItem = document.createElement('div');
   orderItem.className = 'order-item';
   orderItem.innerHTML = `
-    <i class="fa-solid fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
+    <i class="fas fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
   `;
   orderItem.addEventListener('click', () => {
-    window.location.href = `perfil.html#perfil-${order.profileId}#comanda-${order.id}`;
+    window.location.href = `comanda.html#perfil-${order.profileId}#comanda-${order.id}`;
   });
   orderList.appendChild(orderItem);
 }
@@ -305,10 +305,10 @@ function appendOrderItem(order, categoryElement) {
   const orderItem = document.createElement('div');
   orderItem.className = 'order-item';
   orderItem.innerHTML = `
-    <i class="fa-solid fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
+    <i class="fas fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
   `;
   orderItem.addEventListener('click', () => {
-    window.location.href = `perfil.html#perfil-${order.profileId}#comanda-${order.id}`;
+    window.location.href = `comanda.html#perfil-${order.profileId}#comanda-${order.id}`;
   });
   categoryElement.appendChild(orderItem);
 }
@@ -448,6 +448,13 @@ window.addEventListener('load', () => {
 // Voltar para a página inicial
 if (viewProfilesBtn) {
   viewProfilesBtn.addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+}
+
+// Recarregar a página ao clicar na logo
+if (logo) {
+  logo.addEventListener('click', () => {
     window.location.href = 'index.html';
   });
 }
