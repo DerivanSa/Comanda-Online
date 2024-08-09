@@ -169,68 +169,58 @@ if (saveOrderBtn) {
       addOrderToList(order);
 
       // Fechar o modal
+      console.log('Tentando fechar o modal...');
       orderModal.style.display = 'none';
+      console.log('Modal fechado');
     }
   });
 }
 
 // Adicionar comanda à lista na categoria correta
 function addOrderToList(order) {
+  const orderList = getElement('#order-list');
   const categories = categorizeOrders([order]);
 
+  // Exibe comandas de hoje
   if (categories.today.length > 0) {
-    let todayTitle = document.querySelector('h3[data-category="today"]');
-    if (!todayTitle) {
-      todayTitle = document.createElement('h3');
+    let todayCategory = document.querySelector('div[data-category="today"]');
+    if (!todayCategory) {
+      todayCategory = document.createElement('div');
+      todayCategory.setAttribute('data-category', 'today');
+      const todayTitle = document.createElement('h3');
       todayTitle.textContent = `Hoje - ${formatDate(new Date())}`;
-      todayTitle.setAttribute('data-category', 'today');
-      orderList.appendChild(todayTitle);
+      todayCategory.appendChild(todayTitle);
+      orderList.appendChild(todayCategory);
     }
-    categories.today.forEach(order => appendOrderItem(order));
+    categories.today.forEach(order => appendOrderItem(order, todayCategory));
   }
 
+  // Exibe comandas de ontem
   if (categories.yesterday.length > 0) {
-    let yesterdayTitle = document.querySelector('h3[data-category="yesterday"]');
-    if (!yesterdayTitle) {
-      yesterdayTitle = document.createElement('h3');
+    let yesterdayCategory = document.querySelector('div[data-category="yesterday"]');
+    if (!yesterdayCategory) {
+      yesterdayCategory = document.createElement('div');
+      yesterdayCategory.setAttribute('data-category', 'yesterday');
+      const yesterdayTitle = document.createElement('h3');
       yesterdayTitle.textContent = `Ontem - ${formatDate(new Date(new Date().setDate(new Date().getDate() - 1)))}`;
-      yesterdayTitle.setAttribute('data-category', 'yesterday');
-      orderList.appendChild(yesterdayTitle);
+      yesterdayCategory.appendChild(yesterdayTitle);
+      orderList.appendChild(yesterdayCategory);
     }
-    categories.yesterday.forEach(order => appendOrderItem(order));
+    categories.yesterday.forEach(order => appendOrderItem(order, yesterdayCategory));
   }
 
-  if (categories.lastWeek.length > 0) {
-    let lastWeekTitle = document.querySelector('h3[data-category="lastWeek"]');
-    if (!lastWeekTitle) {
-      lastWeekTitle = document.createElement('h3');
-      lastWeekTitle.textContent = 'Semana passada';
-      lastWeekTitle.setAttribute('data-category', 'lastWeek');
-      orderList.appendChild(lastWeekTitle);
-    }
-    categories.lastWeek.forEach(order => appendOrderItem(order));
-  }
-
-  if (categories.lastMonth.length > 0) {
-    let lastMonthTitle = document.querySelector('h3[data-category="lastMonth"]');
-    if (!lastMonthTitle) {
-      lastMonthTitle = document.createElement('h3');
-      lastMonthTitle.textContent = 'Mês passado';
-      lastMonthTitle.setAttribute('data-category', 'lastMonth');
-      orderList.appendChild(lastMonthTitle);
-    }
-    categories.lastMonth.forEach(order => appendOrderItem(order));
-  }
-
+  // Exibe comandas de outras datas com a data como título
   Object.keys(categories.older).forEach(dateString => {
-    let olderTitle = document.querySelector(`h3[data-category="${dateString}"]`);
-    if (!olderTitle) {
-      olderTitle = document.createElement('h3');
+    let olderCategory = document.querySelector(`div[data-category="${dateString}"]`);
+    if (!olderCategory) {
+      olderCategory = document.createElement('div');
+      olderCategory.setAttribute('data-category', dateString);
+      const olderTitle = document.createElement('h3');
       olderTitle.textContent = dateString;
-      olderTitle.setAttribute('data-category', dateString);
-      orderList.appendChild(olderTitle);
+      olderCategory.appendChild(olderTitle);
+      orderList.appendChild(olderCategory);
     }
-    categories.older[dateString].forEach(order => appendOrderItem(order));
+    categories.older[dateString].forEach(order => appendOrderItem(order, olderCategory));
   });
 }
 
@@ -265,16 +255,10 @@ function categorizeOrders(orders) {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const lastWeekStart = new Date(today);
-  lastWeekStart.setDate(today.getDate() - 7);
-  const lastMonthStart = new Date(today);
-  lastMonthStart.setMonth(today.getMonth() - 1);
 
   const categories = {
     today: [],
     yesterday: [],
-    lastWeek: [],
-    lastMonth: [],
     older: {}
   };
 
@@ -284,12 +268,8 @@ function categorizeOrders(orders) {
       categories.today.push(order);
     } else if (orderDate.toDateString() === yesterday.toDateString()) {
       categories.yesterday.push(order);
-    } else if (orderDate >= lastWeekStart && orderDate < today) {
-      categories.lastWeek.push(order);
-    } else if (orderDate >= lastMonthStart && orderDate < lastWeekStart) {
-      categories.lastMonth.push(order);
     } else {
-      const orderDateString = orderDate.toLocaleDateString();
+      const orderDateString = formatDate(orderDate);
       if (!categories.older[orderDateString]) {
         categories.older[orderDateString] = [];
       }
@@ -313,76 +293,6 @@ function appendOrderItem(order, categoryElement) {
   categoryElement.appendChild(orderItem);
 }
 
-// Adicionar comanda à lista na categoria correta
-function addOrderToList(order) {
-  const orderList = getElement('#order-list');
-  const categories = categorizeOrders([order]);
-
-  if (categories.today.length > 0) {
-    let todayCategory = document.querySelector('div[data-category="today"]');
-    if (!todayCategory) {
-      todayCategory = document.createElement('div');
-      todayCategory.setAttribute('data-category', 'today');
-      const todayTitle = document.createElement('h3');
-      todayTitle.textContent = `Hoje - ${formatDate(new Date())}`;
-      todayCategory.appendChild(todayTitle);
-      orderList.appendChild(todayCategory);
-    }
-    categories.today.forEach(order => appendOrderItem(order, todayCategory));
-  }
-
-  if (categories.yesterday.length > 0) {
-    let yesterdayCategory = document.querySelector('div[data-category="yesterday"]');
-    if (!yesterdayCategory) {
-      yesterdayCategory = document.createElement('div');
-      yesterdayCategory.setAttribute('data-category', 'yesterday');
-      const yesterdayTitle = document.createElement('h3');
-      yesterdayTitle.textContent = `Ontem - ${formatDate(new Date(new Date().setDate(new Date().getDate() - 1)))}`;
-      yesterdayCategory.appendChild(yesterdayTitle);
-      orderList.appendChild(yesterdayCategory);
-    }
-    categories.yesterday.forEach(order => appendOrderItem(order, yesterdayCategory));
-  }
-
-  if (categories.lastWeek.length > 0) {
-    let lastWeekCategory = document.querySelector('div[data-category="lastWeek"]');
-    if (!lastWeekCategory) {
-      lastWeekCategory = document.createElement('div');
-      lastWeekCategory.setAttribute('data-category', 'lastWeek');
-      const lastWeekTitle = document.createElement('h3');
-      lastWeekTitle.textContent = 'Semana passada';
-      lastWeekCategory.appendChild(lastWeekTitle);
-      orderList.appendChild(lastWeekCategory);
-    }
-    categories.lastWeek.forEach(order => appendOrderItem(order, lastWeekCategory));
-  }
-
-  if (categories.lastMonth.length > 0) {
-    let lastMonthCategory = document.querySelector('div[data-category="lastMonth"]');
-    if (!lastMonthCategory) {
-      lastMonthCategory = document.createElement('div');
-      lastMonthCategory.setAttribute('data-category', 'lastMonth');
-      const lastMonthTitle = document.createElement('h3');
-      lastMonthTitle.textContent = 'Mês passado';
-      lastMonthCategory.appendChild(lastMonthTitle);
-      orderList.appendChild(lastMonthCategory);
-    }
-    categories.lastMonth.forEach(order => appendOrderItem(order, lastMonthCategory));
-  }
-
-  Object.keys(categories.older).forEach(dateString => {
-    let olderCategory = document.querySelector(`div[data-category="${dateString}"]`);
-    if (!olderCategory) {
-      olderCategory = document.createElement('div');
-      olderCategory.setAttribute('data-category', dateString);
-      const olderTitle = document.createElement('h3');
-      olderTitle.textContent = dateString;
-      olderCategory.appendChild(olderTitle);
-      orderList.appendChild(olderCategory);
-    }
-    categories.older[dateString].forEach(order => appendOrderItem(order, olderCategory));
-  });
-}
 
 // Carregar comandas ao iniciar
 window.addEventListener('load', () => {
@@ -393,6 +303,7 @@ window.addEventListener('load', () => {
     const orders = getOrdersForProfile(profileId);
     const categorizedOrders = categorizeOrders(orders);
 
+    // Carregar comandas de hoje
     if (categorizedOrders.today.length > 0) {
       const todayCategory = document.createElement('div');
       todayCategory.setAttribute('data-category', 'today');
@@ -403,6 +314,7 @@ window.addEventListener('load', () => {
       categorizedOrders.today.forEach(order => appendOrderItem(order, todayCategory));
     }
 
+    // Carregar comandas de ontem
     if (categorizedOrders.yesterday.length > 0) {
       const yesterdayCategory = document.createElement('div');
       yesterdayCategory.setAttribute('data-category', 'yesterday');
@@ -413,26 +325,7 @@ window.addEventListener('load', () => {
       categorizedOrders.yesterday.forEach(order => appendOrderItem(order, yesterdayCategory));
     }
 
-    if (categorizedOrders.lastWeek.length > 0) {
-      const lastWeekCategory = document.createElement('div');
-      lastWeekCategory.setAttribute('data-category', 'lastWeek');
-      const lastWeekTitle = document.createElement('h3');
-      lastWeekTitle.textContent = 'Semana passada';
-      lastWeekCategory.appendChild(lastWeekTitle);
-      orderList.appendChild(lastWeekCategory);
-      categorizedOrders.lastWeek.forEach(order => appendOrderItem(order, lastWeekCategory));
-    }
-
-    if (categorizedOrders.lastMonth.length > 0) {
-      const lastMonthCategory = document.createElement('div');
-      lastMonthCategory.setAttribute('data-category', 'lastMonth');
-      const lastMonthTitle = document.createElement('h3');
-      lastMonthTitle.textContent = 'Mês passado';
-      lastMonthCategory.appendChild(lastMonthTitle);
-      orderList.appendChild(lastMonthCategory);
-      categorizedOrders.lastMonth.forEach(order => appendOrderItem(order, lastMonthCategory));
-    }
-
+    // Carregar comandas de outras datas
     Object.keys(categorizedOrders.older).forEach(dateString => {
       const olderCategory = document.createElement('div');
       olderCategory.setAttribute('data-category', dateString);
