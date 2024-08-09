@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerEl = document.getElementById('footer');
 
     // Nome do Restaurante
-    restaurantNameEl.innerHTML = `<strong style="font-size: 20px;">${profile.estabelecimento || "Nome do Restaurante"}</strong>`;
+    restaurantNameEl.innerHTML = `<strong style="font-size: 34px;">${profile.estabelecimento || "Nome do Restaurante"}</strong>`;
 
     // ID e Mesa
     orderInfoEl.innerHTML = `
@@ -245,15 +245,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const rows = document.querySelectorAll('#product-list tr');
     const products = [];
     rows.forEach(row => {
-      const quantity = row.querySelector('.product-quantity').value;
-      const name = row.querySelector('.product-name').value;
-      const price = row.querySelector('.product-price').value;
-      // Verifica se pelo menos um dos campos está preenchido
-      if (quantity || name || price) {
+      const quantity = parseFloat(row.querySelector('.product-quantity').value) || 0;
+      const name = row.querySelector('.product-name').value.trim();
+      const price = parseFloat(row.querySelector('.product-price').value) || 0;
+
+      // Save only if at least one of the fields is filled
+      if (quantity > 0 || name !== '' || price > 0) {
         products.push({
-          quantity: parseFloat(quantity) || 0, // Se não houver quantidade, define como 0
-          name: name || '', // Se não houver nome, define como string vazia
-          price: parseFloat(price) || 0 // Se não houver preço, define como 0
+          quantity: quantity,
+          name: name,
+          price: price
         });
       }
     });
@@ -342,14 +343,23 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key.startsWith(`order_${profileId}_`)) {
-        allOrders.push(JSON.parse(localStorage.getItem(key)));
+        const storedOrder = JSON.parse(localStorage.getItem(key));
+        allOrders.push(storedOrder);
       }
     }
+
+    // Sort orders by creation date in descending order
     const sortedOrders = allOrders.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
-    const recentOrders = sortedOrders.slice(0, 10);
+
+    // Slice the last 10 orders
+    const recentOrders = sortedOrders.filter(order => order.id !== parseInt(orderId)).slice(0, 10);
+
     recentOrdersListEl.innerHTML = '';
-    recentOrders.forEach(order => {
-      if (order.id !== parseInt(orderId)) { // Evitar exibir a comanda atual
+
+    if (recentOrders.length === 0) {
+      recentOrdersListEl.innerHTML = '<p>Sem outras comandas</p>';
+    } else {
+      recentOrders.forEach(order => {
         const orderEl = document.createElement('div');
         orderEl.className = 'recent-order';
         orderEl.innerHTML = `
@@ -360,12 +370,11 @@ document.addEventListener('DOMContentLoaded', () => {
           window.location.reload(); // Recarregar a página para a comanda clicada
         });
         recentOrdersListEl.appendChild(orderEl);
-      }
-    });
+      });
+    }
   }
 
   loadProducts();
   autoSave();
   loadRecentOrders();
 });
-
