@@ -46,6 +46,151 @@ document.addEventListener('DOMContentLoaded', () => {
   clientContactInput.value = order.clientContact || '';
   waiterNoteInput.value = order.waiterNote || '';
 
+  function populateComandaContent() {
+    const restaurantNameEl = document.getElementById('restaurant-name');
+    const orderInfoEl = document.getElementById('order-info');
+    const waiterNameEl1 = document.getElementById('waiter-Name1');
+    const orderDateEl1 = document.getElementById('order-date1');
+    const waiterNameEl = document.getElementById('waiter-name');
+    const orderDateEl = document.getElementById('order-date');
+    const orderStatusEl1 = document.getElementById('order-status1');
+    const orderCloseDateEl1 = document.getElementById('order-close-date1');
+    const orderDurationEl1 = document.getElementById('order-duration1');
+    const clientNameEl1 = document.getElementById('client-name1');
+    const clientContactEl1 = document.getElementById('client-contact1');
+    const waiterNoteEl1 = document.getElementById('waiter-note1');
+    const productTableBody = document.getElementById('product-table').querySelector('tbody');
+    const totalAmountEl = document.getElementById('total-amount');
+    const totalAmountEl1 = document.getElementById('total-amount1');
+    const footerEl = document.getElementById('footer');
+
+    // Nome do Restaurante
+    restaurantNameEl.innerHTML = `<strong style="font-size: 20px;">${profile.estabelecimento || "Nome do Restaurante"}</strong>`;
+
+    // ID e Mesa
+    orderInfoEl.innerHTML = `
+      <strong style="font-size: 20px;">ID:</strong>
+      <span style="font-size: 16px;"> ${orderId}</span>
+      <strong style="font-size: 20px;">- Mesa:</strong>
+      <span style="font-size: 16px;"> ${order.numeroMesa || "N/A"}</span>
+    `;
+
+    // Garçom
+    waiterNameEl1.innerHTML = `<strong style="font-size: 20px;">Garçom:</strong> <span style="font-size: 16px;">${profile.funcionario || "N/A"}</span>`;
+
+    // Data da Criação
+    orderDateEl1.innerHTML = `<strong style="font-size: 20px;">Data da Criação:</strong> <span style="font-size: 16px;">${new Date(order.creationDate).toLocaleString()}</span>`;
+
+    // Status
+    orderStatusEl1.innerHTML = `<strong style="font-size: 20px;">Status:</strong> <span style="font-size: 16px;">${order.status || "N/A"}</span>`;
+
+    // Condicional para Data de Fechamento e Duração
+    if (order.status === 'Fechada') {
+      orderCloseDateEl1.style.display = 'block';
+      orderDurationEl1.style.display = 'block';
+      orderCloseDateEl1.innerHTML = `<strong style="font-size: 20px;">Data do Fechamento:</strong> <span style="font-size: 16px;">${new Date(order.closeDate).toLocaleString()}</span>`;
+      orderDurationEl1.innerHTML = `<strong style="font-size: 20px;">Duração:</strong> <span style="font-size: 16px;">${order.duration || "N/A"}</span>`;
+    } else {
+      orderCloseDateEl1.style.display = 'none';
+      orderDurationEl1.style.display = 'none';
+    }
+
+    // Nome do Cliente
+    if (order.clientName) {
+      clientNameEl1.style.display = 'block';
+      clientNameEl1.innerHTML = `<strong style="font-size: 20px;">Nome do Cliente:</strong> <span style="font-size: 16px;">${order.clientName}</span>`;
+    } else {
+      clientNameEl1.style.display = 'none';
+    }
+
+    // Contato
+    if (order.clientContact) {
+      clientContactEl1.style.display = 'block';
+      clientContactEl1.innerHTML = `<strong style="font-size: 20px;">Contato:</strong> <span style="font-size: 16px;">${order.clientContact}</span>`;
+    } else {
+      clientContactEl1.style.display = 'none';
+    }
+
+    // Observação do Garçom
+    if (order.waiterNote) {
+      waiterNoteEl1.style.display = 'block';
+      waiterNoteEl1.innerHTML = `<strong style="font-size: 20px;">Observação do Garçom:</strong> <span style="font-size: 16px;">${order.waiterNote}</span>`;
+    } else {
+      waiterNoteEl1.style.display = 'none';
+    }
+
+    productTableBody.innerHTML = '';
+    let totalAmount = 0;
+    order.products.forEach(product => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="border-top: 1px solid #000; border-right: 1px solid #000;">${product.quantity}</td>
+        <td style="border-top: 1px solid #000; border-right: 1px solid #000;">${product.name}</td>
+        <td style="border-top: 1px solid #000;">R$ ${product.price.toFixed(2)}</td>
+      `;
+      productTableBody.appendChild(row);
+      totalAmount += product.quantity * product.price;
+    });
+
+    for (let i = 0; i < 2; i++) {
+      const emptyRow = document.createElement('tr');
+      emptyRow.innerHTML = `
+        <td style="border-top: 1px solid #000; border-right: 1px solid #000;">&nbsp;</td>
+        <td style="border-top: 1px solid #000; border-right: 1px solid #000;">&nbsp;</td>
+        <td style="border-top: 1px solid #000;">&nbsp;</td>
+      `;
+      productTableBody.appendChild(emptyRow);
+    }
+
+    // Total com tamanho específico
+    totalAmountEl.innerHTML = `<strong style="font-size: 20px;">Total:</strong> <span style="font-size: 16px;">R$ ${totalAmount.toFixed(2)}</span>`;
+
+    // Total com tamanho específico
+    totalAmountEl1.innerHTML = `<strong style="font-size: 20px;">Total:</strong> <span style="font-size: 16px;">R$ ${totalAmount.toFixed(2)}</span>`;
+
+    footerEl.textContent = "© Comanda Online - Derivan Souza";
+  }
+
+  // Adicione este código para centralizar os elementos
+  document.getElementById('order-info').style.textAlign = 'center';
+  document.getElementById('product-table').style.margin = '0 auto';
+  document.getElementById('footer').style.textAlign = 'center';
+
+  document.getElementById('save-image-btn').addEventListener('click', () => {
+    populateComandaContent();
+
+    const comandaContainer = document.getElementById('comanda-container');
+    comandaContainer.style.display = 'block';
+
+    html2canvas(comandaContainer, { scale: 0.75 }).then(canvas => {
+      comandaContainer.style.display = 'none';
+
+      const popupContainer = document.getElementById('popup-container');
+      const popupImage = document.getElementById('popup-image');
+      const popupDownloadBtn = document.getElementById('popup-download-btn');
+
+      popupImage.src = canvas.toDataURL('image/png');
+      popupContainer.style.display = 'flex';
+
+      // Remover todos os listeners de click anteriores
+      const newDownloadHandler = () => {
+        const link = document.createElement('a');
+        link.href = popupImage.src;
+        link.download = `comanda_${orderId}_${order.numeroMesa}_${new Date(order.creationDate).toLocaleDateString()}.png`;
+        link.click();
+
+        // Opcional: Esconder o popup depois do download
+        popupContainer.style.display = 'none';
+      };
+
+      // Remover event listeners anteriores
+      popupDownloadBtn.replaceWith(popupDownloadBtn.cloneNode(true));
+
+      // Re-adicionar o listener
+      popupDownloadBtn.addEventListener('click', newDownloadHandler);
+    });
+  });
+
   function calculateTotal() {
     let total = 0;
     const rows = document.querySelectorAll('#product-list tr');
@@ -59,8 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
     totalInput.value = total.toFixed(2);
   }
 
-  function addProductRow() {
-    for (let i = 0; i < 10; i++) {
+  function addProductRow(count = 1) {
+    for (let i = 0; i < count; i++) {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><input type="number" class="product-quantity" value="0" min="0"></td>
@@ -71,8 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
   function loadProducts() {
-    if (order.products) {
+    if (order.products && order.products.length > 0) {
       order.products.forEach(product => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -82,11 +228,18 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         productListEl.appendChild(row);
       });
-    } else {
-      addProductRow(); // Adicionar 16 linhas vazias inicialmente
     }
+
+    // Garantir que pelo menos seis linhas vazias sejam exibidas
+    const currentRows = document.querySelectorAll('#product-list tr').length;
+    const rowsToAdd = Math.max(6 - currentRows, 0);
+    for (let i = 0; i < rowsToAdd; i++) {
+      addProductRow();
+    }
+
     calculateTotal();
   }
+
 
   function saveOrder() {
     const rows = document.querySelectorAll('#product-list tr');
@@ -95,14 +248,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const quantity = row.querySelector('.product-quantity').value;
       const name = row.querySelector('.product-name').value;
       const price = row.querySelector('.product-price').value;
-      if (quantity && name && price) {
+      // Verifica se pelo menos um dos campos está preenchido
+      if (quantity || name || price) {
         products.push({
-          quantity: parseFloat(quantity),
-          name,
-          price: parseFloat(price)
+          quantity: parseFloat(quantity) || 0, // Se não houver quantidade, define como 0
+          name: name || '', // Se não houver nome, define como string vazia
+          price: parseFloat(price) || 0 // Se não houver preço, define como 0
         });
       }
     });
+
     order.clientName = clientNameInput.value;
     order.clientContact = clientContactInput.value;
     order.waiterNote = waiterNoteInput.value;
@@ -119,22 +274,59 @@ document.addEventListener('DOMContentLoaded', () => {
     productListEl.addEventListener('input', saveOrder);
   }
 
-  addProductRowBtn.addEventListener('click', addProductRow);
+  addProductRowBtn.addEventListener('click', () => addProductRow(10));
   productListEl.addEventListener('input', calculateTotal);
 
   saveImageBtn.addEventListener('click', () => {
-    // Lógica de salvar imagem será desenvolvida posteriormente
+    populateComandaContent();
+
+    const comandaContainer = document.getElementById('comanda-container');
+    comandaContainer.style.display = 'block';
+
+    html2canvas(comandaContainer, { scale: 0.75 }).then(canvas => {
+      comandaContainer.style.display = 'none';
+
+      const popupContainer = document.getElementById('popup-container');
+      const popupImage = document.getElementById('popup-image');
+      const popupDownloadBtn = document.getElementById('popup-download-btn');
+
+      popupImage.src = canvas.toDataURL('image/png');
+      popupContainer.style.display = 'flex';
+
+      popupDownloadBtn.addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.href = popupImage.src;
+        link.download = `comanda_${orderId}_${order.numeroMesa}_${new Date(order.creationDate).toLocaleDateString()}.png`;
+        link.click();
+      });
+    });
+  });
+
+  document.getElementById('popup-close').addEventListener('click', () => {
+    const popupContainer = document.getElementById('popup-container');
+    popupContainer.style.display = 'none';
+  });
+
+  window.addEventListener('click', (event) => {
+    const popupContainer = document.getElementById('popup-container');
+    if (event.target === popupContainer) {
+      popupContainer.style.display = 'none';
+    }
   });
 
   closeOrderBtn.addEventListener('click', () => {
-    order.status = 'Fechada';
-    order.closeDate = new Date().toISOString();
-    const creationDate = new Date(order.creationDate);
-    const closeDate = new Date(order.closeDate);
-    const duration = Math.round((closeDate - creationDate) / 1000 / 60); // duração em minutos
-    order.duration = `${duration} minutos`;
-    saveOrder();
-    window.location.reload(); // Recarregar a página para atualizar os status e duração
+    if (order.status !== 'Fechada') {
+      order.status = 'Fechada';
+      order.closeDate = new Date().toISOString();
+      const creationDate = new Date(order.creationDate);
+      const closeDate = new Date(order.closeDate);
+      const duration = Math.round((closeDate - creationDate) / 1000 / 60); // duração em minutos
+      order.duration = `${duration} minutos`;
+      saveOrder();
+      window.location.reload(); // Recarregar a página para atualizar os status e duração
+    } else {
+      alert('Esta comanda já está fechada.');
+    }
   });
 
   backToOrdersBtn.addEventListener('click', () => {
@@ -157,17 +349,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const recentOrders = sortedOrders.slice(0, 10);
     recentOrdersListEl.innerHTML = '';
     recentOrders.forEach(order => {
-      const orderEl = document.createElement('div');
-      orderEl.className = 'recent-order';
-      orderEl.innerHTML = `
-        <p>ID: ${order.id}</p>
-        <p>Status: ${order.status}</p>
-        <p>Data: ${new Date(order.creationDate).toLocaleString()}</p>
-      `;
-      orderEl.addEventListener('click', () => {
-        window.location.href = `comanda.html#perfil-${profileId}#comanda-${order.id}`;
-      });
-      recentOrdersListEl.appendChild(orderEl);
+      if (order.id !== parseInt(orderId)) { // Evitar exibir a comanda atual
+        const orderEl = document.createElement('div');
+        orderEl.className = 'recent-order';
+        orderEl.innerHTML = `
+          <i class="fas fa-receipt"></i> Comanda ${order.id} - Mesa ${order.numeroMesa} - ${order.status} - ${new Date(order.creationDate).toLocaleString()}
+        `;
+        orderEl.addEventListener('click', () => {
+          window.location.href = `comanda.html#perfil-${profileId}#comanda-${order.id}`;
+          window.location.reload(); // Recarregar a página para a comanda clicada
+        });
+        recentOrdersListEl.appendChild(orderEl);
+      }
     });
   }
 
@@ -175,3 +368,4 @@ document.addEventListener('DOMContentLoaded', () => {
   autoSave();
   loadRecentOrders();
 });
+
