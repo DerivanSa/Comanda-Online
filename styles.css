@@ -335,3 +335,10 @@ footer a:hover {
     margin: 5px 0; /* Ajusta o espaçamento vertical em telas menores */
   }
 }
+
+#profile-info{
+  font-size: 35px;
+  padding: 18px;
+  font-weight: bold;
+  text-align: center;
+}
