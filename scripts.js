@@ -190,7 +190,9 @@ function addOrderToList(order) {
       const todayTitle = document.createElement('h3');
       todayTitle.textContent = `Hoje - ${formatDate(new Date())}`;
       todayCategory.appendChild(todayTitle);
-      orderList.appendChild(todayCategory);
+
+      // Inserir no topo da lista
+      orderList.insertBefore(todayCategory, orderList.firstChild);
     }
     categories.today.forEach(order => appendOrderItem(order, todayCategory));
   }
@@ -204,7 +206,13 @@ function addOrderToList(order) {
       const yesterdayTitle = document.createElement('h3');
       yesterdayTitle.textContent = `Ontem - ${formatDate(new Date(new Date().setDate(new Date().getDate() - 1)))}`;
       yesterdayCategory.appendChild(yesterdayTitle);
-      orderList.appendChild(yesterdayCategory);
+
+      // Inserir logo após a categoria "Hoje" (se existir)
+      if (orderList.firstChild) {
+        orderList.insertBefore(yesterdayCategory, orderList.firstChild.nextSibling);
+      } else {
+        orderList.insertBefore(yesterdayCategory, orderList.firstChild);
+      }
     }
     categories.yesterday.forEach(order => appendOrderItem(order, yesterdayCategory));
   }
@@ -218,6 +226,8 @@ function addOrderToList(order) {
       const olderTitle = document.createElement('h3');
       olderTitle.textContent = dateString;
       olderCategory.appendChild(olderTitle);
+
+      // Inserir no final (após "Ontem" ou qualquer outra categoria existente)
       orderList.appendChild(olderCategory);
     }
     categories.older[dateString].forEach(order => appendOrderItem(order, olderCategory));
@@ -351,3 +361,16 @@ if (logo) {
     window.location.href = 'index.html';
   });
 }
+
+// Carregar informações do perfil ao iniciar
+window.addEventListener('load', () => {
+  const profileInfoDiv = getElement('#profile-info');
+
+  if (profileInfoDiv && profileId) {
+    const profile = JSON.parse(localStorage.getItem(`profile_${profileId}`));
+
+    if (profile) {
+      profileInfoDiv.textContent = `${profile.estabelecimento} - ${profile.funcionario}`;
+    }
+  }
+});
