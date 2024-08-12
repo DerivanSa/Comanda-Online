@@ -34,7 +34,7 @@ Ao clicar em uma comanda, você será direcionado para a página de visualizaç�
 - Adicionar informações do cliente (nome, contato, observações).
 - Preencher uma tabela com itens, quantidades e valores.
 - Adicionar mais linhas à tabela, se necessário.
-- Salvar uma imagem da comanda para enviar à cozinha.
+- Salvar uma imagem da comanda no dispositivo, permitindo que o usuário envie a imagem por meios como WhatsApp para as pessoas na cozinha.
 
 ![Comanda](imagens/comanda1.png)
 ![Comanda](imagens/comanda2.png)
@@ -61,18 +61,10 @@ Na página de download, disponível em [Download](https://derivansa.github.io/Co
 - **Excluir Dados:** Remove todos os dados de perfis e comandas do navegador.
 - **Baixar Cookies:** Faz o download dos perfis em um arquivo JSON.
 - **Importar Arquivo JSON:** Permite importar um arquivo JSON com informações de perfis e comandas.
-- **Atualizar Perfil:** Atualiza um perfil específico a partir de um arquivo JSON.
+- **Atualizar Perfil:** Atualize um perfil específico ou adicione um novo perfil a partir de um arquivo JSON.
 
-![Imagem da Página de Download](path/to/your/image6.png)
+![Página de Download](imagens/download.png)
 
 ## Contribuição
 
 Se você deseja contribuir para o projeto, sinta-se à vontade para abrir uma issue ou enviar um pull request no [repositório do GitHub](https://github.com/DerivanSa/Comanda-Online/).
-
-## Licença
-
-Este projeto está licenciado sob a [Licença MIT](LICENSE).
-
----
-
-*Nota: Substitua `path/to/your/imageX.png` pelos caminhos reais das suas imagens.*
