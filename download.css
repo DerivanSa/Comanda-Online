@@ -95,3 +95,42 @@ h1, h2 {
   font-weight: bold;
   color: #ffffff;
 }
+
+.profile-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.profile-item button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.profile-item button:hover {
+  opacity: 0.9;
+}
+
+/* Estilo específico para o botão de exclusão */
+.profile-item .btn-delete {
+  background-color: #dc3545;
+}
+
+/* Efeito hover para o botão de exclusão */
+.profile-item .btn-delete:hover {
+  background-color: #c82333; /* Vermelho mais escuro */
+  opacity: 1; /* Remove a opacidade no hover */
+}
