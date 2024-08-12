@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comanda Online</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cabeçalho */
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Logo */
+        header .logo {
+            max-width: 300px; /* Define a largura máxima da imagem da logo */
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        /* Navegação */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Conteúdo principal */
+        main {
+            padding: 20px;
+            flex: 1;
+        }
+
+        /* Títulos */
+        h2, h3 {
+            color: #333;
+        }
+
+        /* Contêiner de Imagens */
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Espaço entre as imagens */
+            justify-content: center; /* Centraliza as imagens quando há espaço */
+        }
+
+        /* Estilo das imagens */
+        .image-container img {
+            max-width: 30%; /* Define a largura máxima da imagem como 40% do tamanho original */
+            max-height: 30%; /* Define a altura máxima da imagem como 40% do tamanho original */
+            margin: 10px; /* Adiciona uma margem de 10 pixels ao redor de cada imagem */
+            object-fit: cover; /* Garante que a imagem cubra o contêiner, mantendo a proporção */
+        }
+
+        /* Garantir que as imagens sejam exibidas lado a lado em telas grandes */
+        @media (min-width: 768px) {
+            .image-container img {
+                flex: 1 1 calc(20% - 20px); /* Ajusta para aproximadamente 5 imagens por linha */
+            }
+        }
+
+        /* Links */
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Rodapé */
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            position: relative;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+        /* Estilos do Modal */
+        .modal {
+            display: none; /* Esconde o modal por padrão */
+            position: fixed;
+            z-index: 1; /* Fica sobre outros conteúdos */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8); /* Área preta de fundo */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 80%;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            color: #fff;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="logo.png" alt="Logo" class="logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#descricao">Descrição</a></li>
+                <li><a href="#funcionalidades">Funcionalidades</a></li>
+                <li><a href="#contribuicao">Contribuição</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="imageModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </div>
+        <section id="descricao">
+            <h2>Descrição</h2>
+            <p><strong>Comanda Online</strong> é um sistema para gerenciamento de comandas de restaurante de forma digital. Ele permite a criação, visualização e edição de comandas, facilitando a comunicação entre a equipe e melhorando a organização. O sistema está disponível online e pode ser acessado através do seguinte <a href="https://derivansa.github.io/Comanda-Online/">site</a>.</p>
+        </section>
+        <section id="funcionalidades">
+            <h2>Funcionalidades</h2>
+            <h3>Página Inicial</h3>
+            <p>Ao acessar o site, você será direcionado para a página inicial, onde é possível:</p>
+            <ul>
+                <li>Criar um perfil, inserindo o nome do estabelecimento e o nome do funcionário.</li>
+                <li>Visualizar todos os perfis já criados.</li>
+            </ul>
+            <div class="image-container">
+            <img src="imagens/listaperfis.png" alt="Lista de Perfis">
+            <img src="imagens/criarperfil.png" alt="Criar Perfil">
+            </div>
+
+            <h3>Perfil</h3>
+            <p>Ao clicar em um perfil, você será levado para a página de comandas específica desse perfil, onde pode:</p>
+            <ul>
+                <li>Visualizar todas as comandas já criadas.</li>
+                <li>Criar uma nova comanda, inserindo o número da mesa e salvando.</li>
+            </ul>
+            <div class="image-container">
+            <img src="imagens/listacomandas.png" alt="Lista de Comandas">
+            <img src="imagens/criarcomanda.png" alt="Criar Comanda">
+            </div>
+
+            <h3>Edição de Comanda</h3>
+            <p>Ao clicar em uma comanda, você será direcionado para a página de visualização e edição, onde pode:</p>
+            <ul>
+                <li>Adicionar informações do cliente (nome, contato, observações).</li>
+                <li>Preencher uma tabela com itens, quantidades e valores.</li>
+                <li>Adicionar mais linhas à tabela, se necessário.</li>
+                <li>Salvar uma imagem da comanda para enviar à cozinha.</li>
+            </ul>
+            <div class="image-container">
+            <img src="imagens/comanda1.png" alt="Comanda">
+            <img src="imagens/comanda2.png" alt="Comanda">
+            <img src="imagens/salvarcomanda.png" alt="Salvar Comanda">
+            <img src="imagens/comanda_1_1_12_08_2024.png" alt="Comanda Salva">
+            </div>
+
+            <h3>Fechamento de Comanda</h3>
+            <p>Quando a comanda é fechada, a hora de fechamento e a duração são exibidas. Mesmo após o fechamento, você pode continuar a modificar a comanda se novas informações forem fornecidas.</p>
+            <div class="image-container">
+            <img src="imagens/fechar.png" alt="Fechar">
+            </div>
+
+            <h3>Lista de Comandas</h3>
+            <p>O botão 'Lista de Comandas' leva você a uma lista com todas as comandas do perfil. Abaixo, há uma área que exibe as últimas 10 comandas criadas para acesso rápido.</p>
+            <div class="image-container">
+            <img src="imagens/ultimascomandas.png" alt="Ultimas Comandas">
+            </div>
+
+            <h3>Página de Download</h3>
+            <p>Na página de download, disponível em <a href="https://derivansa.github.io/Comanda-Online/download.html">Download</a>, você pode:</p>
+            <ul>
+                <li><strong>Baixar Todos os Perfis e Comandas:</strong> Faz o download de um arquivo JSON contendo todas as informações.</li>
+                <li><strong>Excluir Dados:</strong> Remove todos os dados de perfis e comandas do navegador.</li>
+                <li><strong>Baixar Cookies:</strong> Faz o download dos perfis em um arquivo JSON.</li>
+                <li><strong>Importar Arquivo JSON:</strong> Permite importar um arquivo JSON com informações de perfis e comandas.</li>
+                <li><strong>Atualizar Perfil:</strong> Atualiza um perfil específico ou adicione um novo perfil a partir de um arquivo JSON.</li>
+            </ul>
+            <div class="image-container">
+            <img src="imagens/download.png" alt="Página de Download">
+            </div>
+        </section>
+        <section id="contribuicao">
+            <h2>Contribuição</h2>
+            <p>Se você deseja contribuir para o projeto, sinta-se à vontade para abrir uma issue ou enviar um pull request no <a href="https://github.com/DerivanSa/Comanda-Online/">repositório do GitHub</a>.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; <a href="https://github.com/DerivanSa/">Derivan Souza</a> - <a href="https://github.com/DerivanSa/Comanda-Online">Comanda Online</a> | <a href="/home.html">Home</a></p>
+    </footer>
+    <script>
+        // Obtenha o modal
+        var modal = document.getElementById("imageModal");
+
+        // Obtenha a imagem e o modalImage
+        var images = document.querySelectorAll('.image-container img');
+        var modalImg = document.getElementById("modalImage");
+
+        // Loop através das imagens e adicione um evento de clique
+        images.forEach(function(img) {
+            img.onclick = function() {
+                modal.style.display = "flex";
+                modalImg.src = this.src;
+            }
+        });
+
+        // Obtenha o botão de fechar
+        var span = document.getElementsByClassName("close")[0];
+
+        // Quando o usuário clicar no botão de fechar, feche o modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Quando o usuário clicar fora da imagem, feche o modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
