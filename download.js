@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadCookiesInput = document.getElementById('upload-cookies');
 
     function loadProfiles() {
-        profilesListEl.innerHTML = '';  // Limpa a lista de perfis
+        const profilesListEl = document.getElementById('profiles-list');
+        profilesListEl.innerHTML = ''; // Limpa a lista antes de carregar
+
         const profiles = [];
 
         for (let i = 0; i < localStorage.length; i++) {
@@ -32,17 +34,45 @@ document.addEventListener('DOMContentLoaded', () => {
             profileEl.className = 'profile-item';
             profileEl.innerHTML = `
                 <span>${profile.estabelecimento} - ${profile.funcionario}</span>
-                <button data-profile-id="${profile.id}">Baixar JSON</button>
+                <div class="profile-buttons">
+                    <button data-profile-id="${profile.id}" class="btn-download">Baixar JSON</button>
+                    <button data-profile-id="${profile.id}" class="btn-delete">Excluir</button>
+                </div>
             `;
             profilesListEl.appendChild(profileEl);
         });
 
-        document.querySelectorAll('.profile-item button').forEach(button => {
+        document.querySelectorAll('.btn-download').forEach(button => {
             button.addEventListener('click', () => {
                 const profileId = button.getAttribute('data-profile-id');
                 downloadProfile(profileId);
             });
         });
+
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', () => {
+                const profileId = button.getAttribute('data-profile-id');
+                deleteProfile(profileId);
+            });
+        });
+    }
+
+    function deleteProfile(profileId) {
+        const profileKey = `profile_${profileId}`;
+
+        // Remove o perfil do localStorage
+        localStorage.removeItem(profileKey);
+
+        // Remove as comandas associadas ao perfil
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith(`order_${profileId}_`)) {
+                localStorage.removeItem(key);
+            }
+        }
+
+        alert('Perfil e comandas removidos com sucesso!');
+        loadProfiles(); // Recarrega a lista de perfis
     }
 
     function downloadProfile(profileId) {
@@ -197,26 +227,30 @@ document.addEventListener('DOMContentLoaded', () => {
                             localStorage.removeItem(profileKey);
 
                             // Remover as comandas associadas ao perfil existente
+                            const keysToRemove = [];
                             for (let i = 0; i < localStorage.length; i++) {
                                 const key = localStorage.key(i);
                                 if (key.startsWith(`order_${data.id}_`)) {
-                                    localStorage.removeItem(key);
+                                    keysToRemove.push(key);
                                 }
                             }
+                            keysToRemove.forEach(key => localStorage.removeItem(key));
                         }
 
                         // Adicionar o novo perfil ao localStorage
-                        localStorage.setItem(profileKey, JSON.stringify({
+                        const profile = {
                             id: data.id,
                             estabelecimento: data.estabelecimento,
                             funcionario: data.funcionario,
-                            // Adicione outros campos do perfil aqui, se necessário
-                        }));
+                            creationDate: new Date(data.creationDate).toISOString(), // Garantir que a data esteja em formato ISO
+                        };
+
+                        localStorage.setItem(profileKey, JSON.stringify(profile));
 
                         // Adicionar as comandas ao localStorage
                         if (data.orders && Array.isArray(data.orders)) {
                             data.orders.forEach((order, index) => {
-                                const orderKey = `order_${data.id}_${index}`;
+                                const orderKey = `order_${data.id}_${order.id}`;
                                 localStorage.setItem(orderKey, JSON.stringify(order));
                             });
                         }
@@ -233,6 +267,11 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsText(file);
         }
     });
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleString(); // Exibe a data no formato local
+    }
 
     downloadAllBtn.addEventListener('click', downloadAllProfiles);
     deleteCookiesBtn.addEventListener('click', deleteCookies);
