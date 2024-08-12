@@ -36,19 +36,23 @@ Ao clicar em uma comanda, você será direcionado para a página de visualizaç�
 - Adicionar mais linhas à tabela, se necessário.
 - Salvar uma imagem da comanda para enviar à cozinha.
 
-![Imagem da Edição de Comanda](path/to/your/image3.png)
+![Comanda](imagens/comanda1.png)
+![Comanda](imagens/comanda2.png)
+![Salvar Comanda](imagens/salvarcomanda.png)
+![Comanda Salva](imagens/comanda_1_1_12_08_2024.png)
+
 
 ### Fechamento de Comanda
 
 Quando a comanda é fechada, a hora de fechamento e a duração são exibidas. Mesmo após o fechamento, você pode continuar a modificar a comanda se novas informações forem fornecidas.
 
-![Imagem do Fechamento de Comanda](path/to/your/image4.png)
+![Fechar](imagens/fechar.png)
 
 ### Lista de Comandas
 
-O botão "Lista de Comandas" leva você a uma lista com todas as comandas do perfil, incluindo as últimas 10 comandas criadas para acesso rápido.
+O botão 'Lista de Comandas' leva você a uma lista com todas as comandas do perfil. Abaixo, há uma área que exibe as últimas 10 comandas criadas para acesso rápido.
 
-![Imagem da Lista de Comandas](path/to/your/image5.png)
+![Ultimas Comandas](imagens/ultimascomandas.png)
 
 ### Página de Download
 
