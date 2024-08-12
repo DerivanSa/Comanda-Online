@@ -25,7 +25,8 @@ Ao clicar em um perfil, você será levado para a página de comandas específic
 - Visualizar todas as comandas já criadas.
 - Criar uma nova comanda, inserindo o número da mesa e salvando.
 
-![Imagem da Página de Comandas](path/to/your/image2.png)
+![Lista de Comandas](imagens/listacomandas.png)
+![Criar Comanda](imagens/criarcomanda.png)
 
 ### Edição de Comanda
 
