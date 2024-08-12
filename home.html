@@ -71,10 +71,10 @@
 
         /* Estilo das imagens */
         .image-container img {
-            max-width: 30%;
-            max-height: 30%;
-            margin: 10px;
-            object-fit: cover;
+            max-width: 30%; /* Define a largura máxima da imagem como 40% do tamanho original */
+            max-height: 30%; /* Define a altura máxima da imagem como 40% do tamanho original */
+            margin: 10px; /* Adiciona uma margem de 10 pixels ao redor de cada imagem */
+            object-fit: cover; /* Garante que a imagem cubra o contêiner, mantendo a proporção */
         }
 
         /* Garantir que as imagens sejam exibidas lado a lado em telas grandes */
@@ -150,6 +150,29 @@
             text-decoration: none;
             cursor: pointer;
         }
+        /* Estilos dos Botões */
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap; /* Permite que os botões se movam para a linha seguinte quando necessário */
+            justify-content: center; /* Centraliza os botões horizontalmente */
+            align-items: center; /* Centraliza os botões verticalmente (opcional) */
+            gap: 10px; /* Espaçamento entre os botões */
+        }
+
+        .btn-container button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 20px; /* Aumenta o tamanho dos botões */
+            font-size: 16px; /* Aumenta o tamanho da fonte dos botões */
+            margin: 5px; /* Adiciona margem ao redor dos botões */
+        }
+
+        .btn-container button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +192,11 @@
         <div id="imageModal" class="modal">
             <span class="close">&times;</span>
             <img class="modal-content" id="modalImage">
+        </div>
+        <div class="btn-container">
+            <button onclick="window.location.href='https://derivansa.github.io/Comanda-Online/'">Site</button>
+            <button onclick="window.location.href='https://derivansa.github.io/Comanda-Online/download.html'">Dados</button>
+            <button onclick="window.location.href='https://github.com/DerivanSa/Comanda-Online/'">GitHub</button>
         </div>
         <section id="descricao">
             <h2>Descrição</h2>
@@ -244,7 +272,7 @@
         </section>
     </main>
     <footer>
-        <p>&copy; <a href="https://github.com/DerivanSa/">Derivan Souza</a> - <a href="https://github.com/DerivanSa/Comanda-Online">Comanda Online</a> | <a href="/Comanda-Online/home.html">Home</a></p>
+        <p>&copy; <a href="https://github.com/DerivanSa/">Derivan Souza</a> - <a href="https://github.com/DerivanSa/Comanda-Online">Comanda Online</a> | <a href="/home.html">Home</a></p>
     </footer>
     <script>
         // Obtenha o modal
